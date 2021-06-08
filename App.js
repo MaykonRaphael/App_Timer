@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { LinearGradient } from 'expo-linear-gradient';
+import Counter from './Counter';
 
 export default function App() {
 
@@ -27,7 +28,7 @@ export default function App() {
     ]);
 
     var numbers = [];
-    for(var i = 1; i <= 60; i++) {
+    for(var i = 0; i <= 60; i++) {
         numbers.push(i);
     }
 
@@ -83,7 +84,6 @@ export default function App() {
                             mode="dropdown"
                             onValueChange={(itemValue, itemIndex) => setSeconds(itemValue)}
                         >
-                            <Picker.Item label="0" value="0"/>
                             {
                                 numbers.map(function(val){
                                     return(<Picker.Item label={val.toString()} value={val.toString()} />);
@@ -113,7 +113,6 @@ export default function App() {
                             itemStyle={{ width: 100, color: '#FFF' }}
                             onValueChange={(itemValue, itemIndex) => setSeconds(itemValue)}
                         >
-                            <Picker.Item label="0" value="0"/>
                             {
                                 numbers.map(function(val){
                                     return(<Picker.Item label={val.toString()} value={val.toString()} />)
@@ -143,11 +142,13 @@ export default function App() {
                         })
                     }
                 </View>
-                <TouchableOpacity style={styles.startButton} ><Text style={styles.textStart} >Iniciar</Text></TouchableOpacity>
+                <TouchableOpacity onPress={()=> setState('iniciar')} style={styles.startButton} ><Text style={styles.textStart} >Iniciar</Text></TouchableOpacity>
             </View>
         );
     } else if( state == 'iniciar' ) {
-        //nada nao
+        return (
+            <Counter setState={setState} minutes={minutes} seconds={seconds} />
+        );
     }
 }
 
@@ -185,5 +186,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#FFF',
         fontSize: 20
-    }
+    },
 });
