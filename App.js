@@ -12,18 +12,24 @@ export default function App() {
     const [ seconds, setSeconds ] = useState(0);
     const [ minutes, setMinutes ] = useState(0);
 
-    const [ alarm, setAlarm ] = useState([
+    const [ alarmSound, setAlarmSound ] = useState([
         {
-            id:1,
+            id: 1,
             selected: true,
             sound: 'alarm 1',
-            file: 'alarm1.mp3',
+            file: require('./assets/alarme1.mp3'),
         },
         {
-            id:2,
+            id: 2,
             selected: false,
             sound: 'alarm 2',
-            file: 'alarm2.mp3',
+            file: require('./assets/alarme2.mp3'),
+        },
+        {
+            id: 3,
+            selected: false,
+            sound: 'alarm 3',
+            file: require('./assets/alarme3.mp3'),
         },
     ]);
 
@@ -33,7 +39,7 @@ export default function App() {
     }
 
     function setAlarmSelected(id) {
-        let alarms = alarm.map(function(val){
+        let alarms = alarmSound.map(function(val){
             if(id != val.id )
                 val.selected = false;
             else
@@ -41,7 +47,7 @@ export default function App() {
             return val;
         });
 
-        setAlarm(alarms);
+        setAlarmSound(alarms);
     }
     if( state == 'selecionar' ) {
         return (
@@ -125,7 +131,7 @@ export default function App() {
 
                 <View style={{flexDirection: 'row'}} >
                     {
-                        alarm.map(function(val){
+                        alarmSound.map(function(val){
                             if(val.selected) {
                                 return(
                                     <TouchableOpacity onPress={()=> setAlarmSelected(val.id)} style={styles.buttonSelected} >
@@ -147,7 +153,14 @@ export default function App() {
         );
     } else if( state == 'iniciar' ) {
         return (
-            <Counter setState={setState} minutes={minutes} seconds={seconds} />
+            <Counter
+                alarms={alarmSound}
+                setMinutes={setMinutes}
+                setSeconds={setSeconds}
+                setState={setState}
+                minutes={minutes}
+                seconds={seconds}
+            />
         );
     }
 }

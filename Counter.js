@@ -1,9 +1,70 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Audio } from 'expo-av';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Counter(props) {
+    var done = false;
+    
+    useEffect(()=> {
+        const timer = setInterval(()=> {
+            props.setSeconds(props.seconds-1);
+
+            if( props.seconds <= 0 ) {
+                if( props.minutes > 0 ) {
+                    props.setMinutes(minutes-1);
+                    props.setSeconds(59);
+                } else {
+                    if( !done ) {
+                        done = true;
+                        props.setState('selecionar');
+                        props.setMinutes(0);
+                        props.setSeconds(0);
+                        playAlarmsSound();
+                    }
+                }
+            }
+        }, 1000)
+
+        return() => clearInterval(timer);
+    })
+
+    async function playAlarmsSound() {
+        const soundObject = new Audio.Sound();
+        try {
+            var alarm;
+            props.alarms.map(function(val) {
+                if( val.selected ) {
+                    alarm = val.file;
+                }
+            })
+            await soundObject.loadAsync(alarm);
+            await soundObject.playAsync();
+        } catch(error) {
+            alert('Error to get alarm');
+        }
+    }
+
+    function reset() {
+        props.setState('selecionar');
+        props.setMinutes(0);
+        props.setSeconds(0);
+    }
+
+    function formatNumber(number) {
+        var finalNumber = "";
+        if( number < 10 ) {
+            finalNumber = "0"+number;
+        } else {
+            finalNumber = number;
+        }
+        return finalNumber;
+    }
+
+    var seconds = formatNumber(props.seconds);
+    var minutes = formatNumber(props.minutes);
+
     return(
         <View style={styles.container} >
             <StatusBar style='light' />
@@ -19,10 +80,10 @@ export default function Counter(props) {
                 }}
             />
             <View style={{flexDirection:'row'}}>
-                <Text style={styles.textCounter} >{props.minutes} : </Text>
-                <Text style={styles.textCounter} >{props.seconds}</Text>
+                <Text style={styles.textCounter} >{minutes} : </Text>
+                <Text style={styles.textCounter} >{seconds}</Text>
             </View>
-            <TouchableOpacity onPress={()=> props.setState('selecionar')} style={styles.resetButton} ><Text style={styles.textReset} >Iniciar</Text></TouchableOpacity>
+            <TouchableOpacity onPress={()=> reset()} style={styles.resetButton} ><Text style={styles.textReset} >Iniciar</Text></TouchableOpacity>
         </View>
     );
 }
