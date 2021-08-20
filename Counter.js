@@ -83,7 +83,7 @@ export default function Counter(props) {
                 <Text style={styles.textCounter} >{minutes} : </Text>
                 <Text style={styles.textCounter} >{seconds}</Text>
             </View>
-            <TouchableOpacity onPress={()=> reset()} style={styles.resetButton} ><Text style={styles.textReset} >Iniciar</Text></TouchableOpacity>
+            <TouchableOpacity onPress={()=> reset()} style={styles.resetButton} ><Text style={styles.textReset} >Sair</Text></TouchableOpacity>
         </View>
     );
 }
